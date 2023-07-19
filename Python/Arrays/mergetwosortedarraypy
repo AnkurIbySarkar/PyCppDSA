@@ -1,0 +1,99 @@
+def merge(nums1, m, nums2, n):
+    # Create a new list to store the merged result
+    nums3 = [0] * (m + n)
+
+    left = 0  # Pointer for nums1
+    right = 0  # Pointer for nums2
+    index = 0  # Pointer for nums3
+
+    # Compare elements from nums1 and nums2 and store the smaller element in nums3
+    while left < n and right < m:
+        if nums1[left] <= nums2[right]:
+            nums3[index] = nums1[left]
+            left += 1
+            index += 1
+        else:
+            nums3[index] = nums2[right]
+            right += 1
+            index += 1
+
+    # Copy any remaining elements from nums1 or nums2 to nums3
+    while left < n:
+        nums3[index] = nums1[left]
+        left += 1
+        index += 1
+
+    while right < m:
+        nums3[index] = nums2[right]
+        right += 1
+        index += 1
+
+    # Copy elements from nums3 back to nums1 and nums2
+    for i in range(n + m):
+        if i < n:
+            nums1[i] = nums3[i]
+        else:
+            nums2[i - n] = nums3[i]
+
+
+def merge_alternative(arr1, n, arr2, m):
+    left = n - 1  # Pointer for arr1
+    right = 0  # Pointer for arr2
+
+    # Compare elements from arr1 and arr2 and swap if necessary to maintain sorted order
+    while left >= 0 and right < m:
+        if arr1[left] > arr2[right]:
+            arr1[left], arr2[right] = arr2[right], arr1[left]
+            left -= 1
+            right += 1
+        else:
+            break
+
+    # Sort the modified arr1 and arr2
+    arr1.sort()
+    arr2.sort()
+
+
+def swap_if_greater(ar1, ar2, ind1, ind2):
+    # Helper function to swap elements if the first element is greater than the second
+    if ar1[ind1] > ar2[ind2]:
+        ar1[ind1], ar2[ind2] = ar2[ind2], ar1[ind1]
+
+
+def merge_gap(ar1, ar2):
+    n = len(ar1)
+    m = len(ar2)
+    len_ = n + m
+    gap = (len_ // 2) + (len_ % 2)
+
+    while gap > 0:
+        left = 0
+        right = left + gap
+
+        # Compare elements based on the gap and swap if necessary
+        while right < len_:
+            if left < n and right >= n:
+                swap_if_greater(ar1, ar2, left, right - n)
+            elif left >= n:
+                swap_if_greater(ar2, ar2, left - n, right - n)
+            else:
+                swap_if_greater(ar1, ar1, left, right)
+
+            left += 1
+            right += 1
+
+        if gap == 1:
+            break
+
+        gap = (gap // 2) + (gap % 2)
+
+
+v1 = [1, 2, 3]
+m = 3
+v2 = [2, 5, 6]
+n = 3
+
+merge(v1, m, v2, n)
+
+print(v1)
+print(v2)
